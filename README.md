@@ -1,0 +1,1 @@
+Neural net zero to hero cyoutube course by Andrej Karpathy
