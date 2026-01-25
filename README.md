@@ -1,1 +1,1 @@
-Neural net zero to hero cyoutube course by Andrej Karpathy
+First video Neural net zero to hero youtube course by Andrej Karpathy - Building Micrograd
