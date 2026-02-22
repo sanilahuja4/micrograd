@@ -2,7 +2,11 @@
   "python.defaultInterpreterPath": ".venv/bin/python",
   "github.copilot.enable": false,
 
-  "editor.quickSuggestions": false,
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "strings": "off",
+    "other": "off"
+  },
   "editor.suggestOnTriggerCharacters": false,
   "editor.inlineSuggest.enabled": false,
   "editor.acceptSuggestionOnEnter": "off"
