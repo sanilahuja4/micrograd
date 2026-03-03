@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '**'   # run on push to any branch
+      - '**'
   pull_request:
 
 jobs:
@@ -25,6 +25,12 @@ jobs:
 
       - name: Install package
         run: uv pip install -e .
+
+      - name: Install pre-commit
+        run: uv pip install pre-commit
+
+      - name: Run pre-commit checks
+        run: uv run pre-commit run --all-files
 
       - name: Run tests
         run: uv run pytest
