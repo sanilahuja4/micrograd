@@ -4,7 +4,7 @@ import random
 
 class Module:
     def zero_grad(self):
-        for p in self.parameters:
+        for p in self.parameters():
             p.grad = 0
 
     def parameters(self):
@@ -17,12 +17,12 @@ class Neuron(Module):
         self.b = Value(0)
 
     def __call__(self, x):
-        act = Value(sum([xi * bi for xi, bi in zip(x, self.w)], self.b))
+        act = sum([xi * bi for xi, bi in zip(x, self.w)], self.b)
         out = act.tanh()
-        return out[0] if len(out) == 1 else out
+        return out
 
     def parameters(self):
-        return [self.b] + self.b
+        return [self.b] + self.w
 
 
 class Layer(Module):
@@ -42,7 +42,9 @@ class Layer(Module):
 class MLP(Module):
     def __init__(self, nin: int, nouts: list[int]):
         self.sz = [nin] + nouts
-        self.layers = [Layer(self.sz[i], self.sz[i + 1]) for i in range(len(self.sz))]
+        self.layers = [
+            Layer(self.sz[i], self.sz[i + 1]) for i in range(len(self.sz) - 1)
+        ]
 
     def __call__(self, x):
         for layer in self.layers:
