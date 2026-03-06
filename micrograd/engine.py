@@ -48,7 +48,7 @@ class Value:
         assert isinstance(
             other, (int, float)
         ), "only supporting int/float powers for now"
-        out = Value(self.data**other, (self,), f"**{other}")
+        out = Value(self.data**other, _children=(self,), _op=f"**{other}")
 
         def _backward():
             self.grad += out.grad * other * self.data ** (other - 1)
@@ -82,7 +82,7 @@ class Value:
         return out
 
     def relu(self):
-        out = Value(0 if self.data < 0 else self.data, (self,), "ReLU")
+        out = Value(0 if self.data < 0 else self.data, _children=(self,), _op="ReLU")
 
         def _backward():
             self.grad += (out.data > 0) * out.grad
@@ -93,7 +93,7 @@ class Value:
 
     def exp(self):
         x = self.data
-        out = Value(math.exp(x), (self,), "exp")
+        out = Value(math.exp(x), _children=(self,), _op="exp")
 
         def _backward():
             self.grad += out.grad * out.data
