@@ -30,7 +30,8 @@ class Layer(Module):
         self.neurons = [Neuron(nin) for _ in range(nout)]
 
     def __call__(self, x):
-        return [neuron(x) for neuron in self.neurons]
+        out = [neuron(x) for neuron in self.neurons]
+        return out[0] if len(out) == 1 else out
 
     def parameters(self):
         param_list = []

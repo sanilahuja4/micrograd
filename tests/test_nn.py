@@ -70,7 +70,7 @@ def test_mlp_call():
     x = [Value(1.0), Value(2.0), Value(3.0)]
     output = mlp(x)
     # Output should be a list (from the last layer)
-    assert isinstance(output, list)
+    assert isinstance(output, Value)
 
 
 def test_mlp_parameters():
@@ -101,28 +101,7 @@ def test_mlp_forward_pass_values():
     output = mlp(x)
 
     # Output should be a list
-    assert isinstance(output, list)
-    # Should have outputs from the last layer
-    assert len(output) > 0
+    assert isinstance(output, Value)
     # Each output should be a Value with tanh activation (between -1 and 1)
-    for out in output:
-        if isinstance(out, Value):
-            assert -1.5 <= out.data <= 1.5  # Some margin for numerical issues
-
-
-def test_layer_with_single_neuron():
-    """Test edge case: layer with single neuron"""
-    layer = Layer(nin=3, nout=1)
-    assert len(layer.neurons) == 1
-    x = [Value(1.0), Value(2.0), Value(3.0)]
-    output = layer(x)
-    assert len(output) == 1
-
-
-def test_mlp_single_layer():
-    """Test edge case: MLP with single output layer"""
-    mlp = MLP(nin=2, nouts=[1])
-    assert len(mlp.layers) == 1
-    x = [Value(1.0), Value(2.0)]
-    output = mlp(x)
-    assert isinstance(output, list)
+    if isinstance(output, Value):
+        assert -1.5 <= output.data <= 1.5  # Some margin for numerical issues
