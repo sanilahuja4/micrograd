@@ -87,8 +87,22 @@ def loss_max_margin(pred: list[Value], labels: list[int]):
 
 
 def train_model(
-    X: list[Value], y: list[int], nn: MLP, epochs: int, lr: float, batch_size: int
+    X: list[Value],
+    y: list[int],
+    nn: MLP,
+    epochs: int,
+    initial_lr: float = 1.0,
+    batch_size: int = None,
 ):
+    """
+    Train the model using max-margin loss.
+
+    Returns:
+        tuple: (final_loss, final_accuracy)
+    """
+    final_loss = None
+    final_acc = None
+
     for ep in range(epochs):
         if batch_size is None:
             Xb, yb = X, y
@@ -107,16 +121,32 @@ def train_model(
         # backward propapagation
         nn.zero_grad()
         loss.backward()
-        lr = 1.0 - 0.9 * ep / 100
+
+        # learning rate schedule
+        lr = initial_lr - 0.9 * initial_lr * ep / epochs
+
         # update weights
         for p in nn.parameters():
             # print(p.data, p.grad)
             p.data -= lr * p.grad
 
-        print(f"step {ep} lr {lr} loss {loss.data}, accuracy {acc * 100}%")
+        print(f"step {ep} lr {lr:.3f} loss {loss.data:.4f}, accuracy {acc * 100:.1f}%")
+
+        # Store final values
+        final_loss = loss.data
+        final_acc = acc
+
+    return final_loss, final_acc
 
 
 def main():
     X, y = get_dataset()
-    nn = MLP(2, [8, 8, 1], activation=["relu", "relu", "tanh"])
-    train_model(X=X, y=y, nn=nn, epochs=100, lr=0.05, batch_size=None)
+    nn = MLP(2, [16, 16, 1], activation=["relu", "relu", "linear"])
+    final_loss, final_acc = train_model(
+        X=X, y=y, nn=nn, epochs=100, initial_lr=1.0, batch_size=None
+    )
+    print(f"\nFinal: loss={final_loss:.4f}, accuracy={final_acc*100:.1f}%")
+
+
+if __name__ == "__main__":
+    main()
